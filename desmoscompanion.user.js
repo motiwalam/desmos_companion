@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name Desmos Companion
-// @version 0.0.0
+// @version 1.0.0
 // @description Provides a set of easy to use wrappers around the Desmos API to make Desmos even more programmable!
 // @author supermusti7
 
 // @match https://www.desmos.com/calculator
 // @match https://www.desmos.com/calculator/*
 
-// @downloadURL http://0.0.0.0:8000/js/desmoscompanion.user.js
+// @downloadURL https://thechosenreader.github.io/desmos_companion/desmoscompanion.user.js
 
 // @require  	https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
