@@ -7,8 +7,6 @@
 // @match https://www.desmos.com/calculator
 // @match https://www.desmos.com/calculator/*
 
-// @downloadURL https://thechosenreader.github.io/desmos_companion/desmoscompanion.user.js
-
 // @require  	https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
 
