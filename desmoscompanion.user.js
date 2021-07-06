@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name Desmos Companion
-// @version 1.0.0
+// @version 1.0.1
 // @description Provides a set of easy to use wrappers around the Desmos API to make Desmos even more programmable!
 // @author supermusti7
 
 // @match https://www.desmos.com/calculator
 // @match https://www.desmos.com/calculator/*
+
 
 // @require  	https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
@@ -75,18 +76,23 @@ function main() {
        dependent on underscore, but fuck it, ive been doing this too long
     */
     get_dependencies(
-      ["https://thechosenreader.github.io/javascript-sandbox-console/src/libs/underscore.min.js",
+      ["https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-umd-min.js",  // latest as of 06/07/21
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/backbone.min.js",
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/backbone-localStorage.min.js",
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/jquery.min.js",
        "https://thechosenreader.github.io/JSON-js/cycle.js",
-       "https://thechosenreader.github.io/javascript-sandbox-console/src/sandbox-console.js"],
+       "http://localhost:8000/sandbox/src/sandbox-console.js"],
       (d, t, s) => {
         window.sandbox = new Sandbox.View({
           el : $('#sandbox'),
           model : new Sandbox.Model()
         });
-      })
+      }, [
+        /* this defines a special callback for underscore.js, which seems to just
+           exit after defining underscore for AMD, so this deals with that case
+        */
+        (d, t, s) => { (typeof _ === "undefined") ? window._ = require("underscore") : null }
+      ])
 
     $(graph_container.children.item(0)).append(button)
 
@@ -94,12 +100,14 @@ function main() {
 
 }
 
-function get_dependencies(files, callback) {
+function get_dependencies(files, callback, individual_callbacks) {
   var i = 0;
 
   function _recursive_callback(d, t, s) {
-    c = i++  // save current value of i and then increment i
-    $.getScript(files[c], (c === files.length - 1) ? callback : _recursive_callback)
+    cidx = i++  // save current value of i and then increment i
+    _c = (cidx === files.length - 1) ? callback : _recursive_callback
+    c = (individual_callbacks[cidx] ? (d1, t1, s1) => { individual_callbacks[cidx](d, t, s); _c(d, t, s) } : _c)
+    $.getScript(files[cidx], c)
   }
 
   _recursive_callback(null, null, null);
