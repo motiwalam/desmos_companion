@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Desmos Companion
-// @version 1.0.1
+// @version 1.0.2
 // @description Provides a set of easy to use wrappers around the Desmos API to make Desmos even more programmable!
 // @author supermusti7
 
@@ -81,9 +81,9 @@ function main() {
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/backbone-localStorage.min.js",
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/jquery.min.js",
        "https://thechosenreader.github.io/JSON-js/cycle.js",
-       "http://localhost:8000/sandbox/src/sandbox-console.js"],
+       "https://thechosenreader.github.io/javascript-sandbox-console/src/sandbox-console.js"],
       (d, t, s) => {
-        window.sandbox = new Sandbox.View({
+          window.sandbox = new Sandbox.View({
           el : $('#sandbox'),
           model : new Sandbox.Model()
         });
