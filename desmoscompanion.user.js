@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Desmos Companion
-// @version 1.0.2
+// @version 1.1.0
 // @description Provides a set of easy to use wrappers around the Desmos API to make Desmos even more programmable!
 // @author supermusti7
 
@@ -10,6 +10,8 @@
 
 // @require  	https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
+
+var SHOWCONSOLE = true;  // change to false to hide console
 
 function main() {
   const $ = window.jQuery;
@@ -69,7 +71,10 @@ function main() {
     its presence guarantees the appended element appears on top of the graph.
     using @run-at didnt work too well, but i didnt explore it properly either
     */
-    graph_container.children.item(0).appendChild(myConsole)
+    if (SHOWCONSOLE) {
+      $(graph_container.children.item(0)).append(myConsole)
+      $(graph_container.children.item(0)).append(button)
+    }
 
     /* this crazy shit is to ensure that the sandbox is created after every
        script has been loaded in the correct order. probably, backbone.js is not
@@ -79,14 +84,16 @@ function main() {
       ["https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-umd-min.js",  // latest as of 06/07/21
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/backbone.min.js",
        "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/backbone-localStorage.min.js",
-       "https://thechosenreader.github.io/javascript-sandbox-console/src/libs/jquery.min.js",
        "https://thechosenreader.github.io/JSON-js/cycle.js",
        "https://thechosenreader.github.io/javascript-sandbox-console/src/sandbox-console.js"],
       (d, t, s) => {
+        if (SHOWCONSOLE) {
           window.sandbox = new Sandbox.View({
           el : $('#sandbox'),
           model : new Sandbox.Model()
         });
+        }
+
       }, [
         /* this defines a special callback for underscore.js, which seems to just
            exit after defining underscore for AMD, so this deals with that case
@@ -94,19 +101,33 @@ function main() {
         (d, t, s) => { (typeof _ === "undefined") ? window._ = require("underscore") : null }
       ])
 
-    $(graph_container.children.item(0)).append(button)
 
+      get_dependencies(
+        [
+          "https://thechosenreader.github.io/src/shlex.js",
+          "https://thechosenreader.github.io/src/help.js",
+          "https://thechosenreader.github.io/src/query.js",
+          "https://thechosenreader.github.io/src/input.js",
+          "https://thechosenreader.github.io/src/parser.js"
+        ], (d, t, s) => {
+          Calc.observeEvent("change", onChanged)  // parser.js
+          document.onkeyup = onKeyUp;  // parser.js
+        },
+
+        []
+      )
   }
 
 }
 
 function get_dependencies(files, callback, individual_callbacks) {
   var i = 0;
-
+  var individual_callbacks = (individual_callbacks === null ? [] : individual_callbacks)
   function _recursive_callback(d, t, s) {
-    cidx = i++  // save current value of i and then increment i
-    _c = (cidx === files.length - 1) ? callback : _recursive_callback
-    c = (individual_callbacks[cidx] ? (d1, t1, s1) => { individual_callbacks[cidx](d, t, s); _c(d, t, s) } : _c)
+    var cidx = i++  // save current value of i and then increment i
+    var _c = (cidx === files.length - 1) ? callback : _recursive_callback
+    // debugger;
+    var c = (individual_callbacks[cidx] ? (d1, t1, s1) => { individual_callbacks[cidx](d, t, s); _c(d, t, s) } : _c)
     $.getScript(files[cidx], c)
   }
 
