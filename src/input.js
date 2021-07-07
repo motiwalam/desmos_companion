@@ -5,7 +5,21 @@
 Input = {
 
   Latex: {
+    sin: "\\sin",
+    cos: "\\cos",
+    tan: "\\tan",
+    arcsin: "\\arcsin",
+    arccos: "\\arccos",
+    arctan: "\\arctan",
+
+  },
+
+  Expressions: {
 
   }
 
 }
+
+
+E = Input.Expressions
+L = Input.Latex

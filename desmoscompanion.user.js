@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Desmos Companion
-// @version 1.1.0
+// @version 1.1.1
 // @description Provides a set of easy to use wrappers around the Desmos API to make Desmos even more programmable!
 // @author supermusti7
 
@@ -104,11 +104,11 @@ function main() {
 
       get_dependencies(
         [
-          "https://thechosenreader.github.io/src/shlex.js",
-          "https://thechosenreader.github.io/src/help.js",
-          "https://thechosenreader.github.io/src/query.js",
-          "https://thechosenreader.github.io/src/input.js",
-          "https://thechosenreader.github.io/src/parser.js"
+          "https://thechosenreader.github.io/desmos_companion/src/shlex.js",
+          "https://thechosenreader.github.io/desmos_companion/src/help.js",
+          "https://thechosenreader.github.io/desmos_companion/src/query.js",
+          "https://thechosenreader.github.io/desmos_companion/src/input.js",
+          "https://thechosenreader.github.io/desmos_companion/src/parser.js"
         ], (d, t, s) => {
           Calc.observeEvent("change", onChanged)  // parser.js
           document.onkeyup = onKeyUp;  // parser.js
